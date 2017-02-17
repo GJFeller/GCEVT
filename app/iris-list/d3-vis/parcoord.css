@@ -1,0 +1,39 @@
+svg {
+    font: 10px sans-serif;
+}
+
+.backgroundPCP path {
+    fill: none;
+    stroke: #ddd;
+    shape-rendering: crispEdges;
+}
+
+.foregroundPCP path {
+    fill: none;
+
+}
+
+.brushPCP .extent {
+    fill-opacity: .3;
+    stroke: #fff;
+    shape-rendering: crispEdges;
+}
+
+.axisPCP line,
+.axisPCP path {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+
+.axisPCP text {
+    text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+    cursor: move;
+}
+
+.legendPCP {
+    font-size: 12px;
+}
+rect {
+    stroke-width: 2;
+}
