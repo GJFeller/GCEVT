@@ -1,8 +1,8 @@
 # AngularJS + D3 + ThreeJS + RESTful Integration
 
-This is an base front-end application to have a base application which integrates AngularJS, access to no-sql database with RESTful API, D3 for 2D data visualization and ThreeJS for 3D rendering. 
+This is an base front-end application to have a base application which integrates AngularJS, access to no-sql database with RESTful web service, D3 for 2D data visualization and ThreeJS for 3D rendering. 
 
-The back-end application to make the RESTful API is at https://github.com/GJFeller/MongoBackendRESTful
+The back-end application to make the RESTful web service is at https://github.com/GJFeller/MongoBackendRESTful
 
 
 ### Prerequisites
