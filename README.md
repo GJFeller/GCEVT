@@ -1,35 +1,40 @@
-# `angular-seed` — the seed for AngularJS apps
+# AngularJS + D3 + ThreeJS + RESTful Integration
 
+This is an base front-end application to have a base application which integrates AngularJS, access to no-sql database with RESTful API, D3 for 2D data visualization and ThreeJS for 3D rendering. 
 
-
-## Getting Started
-
+The back-end application to make the RESTful API is at https://github.com/GJFeller/MongoBackendRESTful
 
 
 ### Prerequisites
 
+You need to install before running the code:
 
-
-### Clone `angular-seed`
-
-
+- MongoDB (for the back-end)
+- Node.js
+- Bower
 
 ### Install Dependencies
 
+Execute in the terminal the following command to install all the dependencies needed but bower (bower need to be installed before):
 
+```
+npm install
+```
 
 ### Run the Application
 
-We have preconfigured the project with a simple development web server. The simplest way to start
-this server is:
+1st - Get the Iris dataset (https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data) and write with MongoDB client. You are going to need to write code to parse the data and transform it in JSON and write it in the database.
+
+2nd - Run the MongoDB server (if it is not running yet).
+
+3rd - Run the back-end application to be able to load the data.
+
+4th - Run the following command in the terminal for the front-end application:
 
 ```
 npm start
 ```
 
-Now browse to the app at [`localhost:8000/index.html`][local-app-url].
-
-
-## Directory Layout
+5th - Now browse to the app at [`localhost:8000/index.html`][local-app-url].
 
 
