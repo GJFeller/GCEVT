@@ -14,9 +14,9 @@ angular.module('iris')
 
                     var margin = {top: 30, right: 50, bottom: 30, left: 10};
 
-                    var width = 960 - margin.left - margin.right,
+                    var width = $("#parCoord").width() - margin.left - margin.right,
                         // calculate the height
-                        height = 500 - margin.top - margin.bottom,
+                        height = $("#first").height() - margin.top - margin.bottom,
                         // Use the category20() scale function for multicolor support
                         color = d3.scale.category10(),
                         //xScale for parallel coord

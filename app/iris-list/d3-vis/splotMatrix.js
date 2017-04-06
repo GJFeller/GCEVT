@@ -12,10 +12,14 @@ angular.module('iris')
 
                 d3Service.d3().then(function (d3) {
 
-                    var margin = {top: 30, right: 50, bottom: 30, left: 30};
+                    var margin = {top: 30, right: 30, bottom: 30, left: 30};
 
-                    var width = 960,
+                    /*var width = 960,
                         size = 230,
+                        padding = 20;*/
+
+                    var width = $("#parCoord").width(),
+                        size = width / 4,
                         padding = 20;
 
                     var x = d3.scale.linear()

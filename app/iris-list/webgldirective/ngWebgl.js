@@ -6,8 +6,6 @@ angular.module('iris')
         return {
             restrict: 'A',
             scope: {
-                'width': '=',
-                'height': '=',
                 'fillcontainer': '=',
                 'scale': '=',
                 'materialType': '=',
@@ -21,9 +19,10 @@ angular.module('iris')
                     var camera, scene, renderer,
                         shadowMesh, icosahedron, light, cube = [],
                         mouseX = 0, mouseY = 0,
+                        width = $("#webgl").width(), height = $("#webgl").height(),
                         contW = (scope.fillcontainer) ?
-                            element[0].clientWidth : scope.width,
-                        contH = scope.height,
+                            element[0].clientWidth : width,
+                        contH = height,
                         windowHalfX = contW / 2,
                         windowHalfY = contH / 2,
                         materials = {},
@@ -148,7 +147,7 @@ angular.module('iris')
                                     console.log("setting gray");
                                     newCube.material.color.setHex(0xcccccc);
                                 }
-                                newCube.position.x = -500 + i*500;
+                                newCube.position.x = -300 + i*300;
                                 scene.add(newCube);
                                 cube.push(newCube);
 
@@ -246,8 +245,8 @@ angular.module('iris')
                         scope.resizeCanvas = function () {
 
                             contW = (scope.fillcontainer) ?
-                                element[0].clientWidth : scope.width;
-                            contH = scope.height;
+                                element[0].clientWidth : width;
+                            contH = height;
 
                             windowHalfX = contW / 2;
                             windowHalfY = contH / 2;
