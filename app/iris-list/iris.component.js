@@ -29,6 +29,51 @@ angular.
         $scope.scale = 1;
         $scope.materialType = 'lambert';
 
+        $scope.treeData = [
+            {
+                text: "Ensemble1",
+                nodes:  [
+                            {
+                                text: "Sim1"
+                            },
+                            {
+                                text: "Sim2"
+                            },
+                            {
+                                text: "Sim3"
+                            }
+                        ]
+            },
+            {
+                text: "Ensemble2",
+                nodes:  [
+                    {
+                        text: "Sim4"
+                    },
+                    {
+                        text: "Sim5"
+                    },
+                    {
+                        text: "Sim6"
+                    }
+                ]
+            },
+            {
+                text: "Ensemble3",
+                nodes:  [
+                    {
+                        text: "Sim7"
+                    },
+                    {
+                        text: "Sim8"
+                    },
+                    {
+                        text: "Sim9"
+                    }
+                ]
+            }
+        ];
+
 }]);
     /*.component('iris', {
         templateUrl: 'iris-list/iris-list.template.html',
