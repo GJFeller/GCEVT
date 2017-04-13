@@ -16,9 +16,13 @@
   <link rel="stylesheet" href="iris-list/d3-vis/splotMatrix.css">
   <link rel="stylesheet" href="iris-list/d3-vis/lineChart.css">
   <link rel="stylesheet" href="bower_components/jquery-ui/themes/base/jquery-ui.css">
+
   <script src="bower_components/jquery/dist/jquery.min.js"></script>
   <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
   <script src="http://jonmiles.github.io/bootstrap-treeview/js/bootstrap-treeview.js"></script>
+
+    <link rel="stylesheet" href="bower_components/fancytree/dist/skin-bootstrap/ui.fancytree.css" class="skinswitcher">
+
 </head>
 <body>
   <!--<ul class="menu">
@@ -58,19 +62,44 @@
       <div class="container-fluid">
           <!--<h2>---</h2>!-->
           <div class="row" id="first">
-              <div class="col-sm-4 col-md-3 sidebar">
+              <div class="col-sm-4 col-md-4 sidebar">
                   <div id="accordion">
                       <h3>Ensemble List</h3>
                       <div>
-                          <div id="treeviewSimulations" class=""></div>
+                          <!--<div id="bootstraptreeviewSimulations" class=""></div>-->
+                          <div id="fancytreeSimulations" class=""></div>
                       </div>
                       <h3>Variable List</h3>
                       <div>
-                          <p>Test</p>
+                          <div id="fancytreeVariable" class=""></div>
                       </div>
                       <h3>Variable Selections</h3>
                       <div>
-                          Test2
+                          <table id="myTable" class="table table-bordered table-sm">
+                              <tr id="header">
+                                  <th>Variable</th>
+                                  <th>Specie</th>
+                                  <th>Multivariate</th>
+                                  <th>Spatial</th>
+                                  <th>Temporal</th>
+                              </tr>
+                              <!--<tr>
+                                  <td>Alfreds Futterkiste</td>
+                                  <td>Germany</td>
+                              </tr>
+                              <tr>
+                                  <td>Berglunds snabbkop</td>
+                                  <td>Sweden</td>
+                              </tr>
+                              <tr>
+                                  <td>Island Trading</td>
+                                  <td>UK</td>
+                              </tr>
+                              <tr>
+                                  <td>Koniglich Essen</td>
+                                  <td>Germany</td>
+                              </tr>-->
+                          </table>
                       </div>
                   </div>
 
@@ -160,6 +189,11 @@
   <script src="bower_components/angular-resource/angular-resource.js"></script>
   <script src="bower_components/three.js/build/three.js"></script>
   <script src="bower_components/jquery-ui/ui/jquery-ui.js"></script>
+  <script src="bower_components/fancytree/dist/src/jquery.fancytree.js"></script>
+  <script src="bower_components/fancytree/dist/src/jquery.fancytree.dnd.js"></script>
+  <script src="bower_components/fancytree/dist/src/jquery.fancytree.edit.js"></script>
+  <script src="bower_components/fancytree/dist/src/jquery.fancytree.glyph.js"></script>
+  <script src="bower_components/fancytree/dist/src/jquery.fancytree.wide.js"></script>
   <!--<script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>!-->
   <script src="app.js"></script>
   <script src="iris-list/iris.module.js"></script>
@@ -179,15 +213,171 @@
   <script src="components/version/version-directive.js"></script>
   <script src="components/version/interpolate-filter.js"></script>
   <script type="text/javascript">
+
+      glyph_opts = {
+          map: {
+              doc: "glyphicon glyphicon-file",
+              docOpen: "glyphicon glyphicon-file",
+              checkbox: "glyphicon glyphicon-unchecked",
+              checkboxSelected: "glyphicon glyphicon-check",
+              checkboxUnknown: "glyphicon glyphicon-share",
+              dragHelper: "glyphicon glyphicon-play",
+              dropMarker: "glyphicon glyphicon-arrow-right",
+              error: "glyphicon glyphicon-warning-sign",
+              expanderClosed: "glyphicon glyphicon-menu-right",
+              expanderLazy: "glyphicon glyphicon-menu-right",  // glyphicon-plus-sign
+              expanderOpen: "glyphicon glyphicon-menu-down",  // glyphicon-collapse-down
+              folder: "glyphicon glyphicon-folder-close",
+              folderOpen: "glyphicon glyphicon-folder-open",
+              loading: "glyphicon glyphicon-refresh glyphicon-spin"
+          }
+      };
         $(function() {
             var e = document.getElementById("ctrl");
             var $scope = angular.element(e).scope();
-            $('#treeviewSimulations').treeview({
-                levels: 1,
-                data: $scope.treeData
+            var selectedVariableTable = document.getElementById("myTable").getElementsByTagName('tbody')[0];
+            //console.log(selectedVariableTable.children[0].children);
+            /*$('#bootstraptreeviewSimulations').treeview({
+                data: $scope.bootStrapTreeData,
+                showIcon: false,
+                showCheckbox: true,
+                onNodeChecked: function(event, node) {
+
+                },
+                onNodeUnchecked: function(event, node) {
+
+                },
+                levels: 1
+            });*/
+
+            function onChangeSpatialCheckbox() {
+
+            }
+
+            function onChangeMultivariateCheckbox() {
+
+            }
+
+            function onChangeTemporalCheckbox() {
+
+            }
+
+            function addRowInTable(obj) {
+                /*var tr = document.createElement("tr");
+                var var_td1 = document.createElement("td");
+                var_td1.appendChild(document.createTextNode(obj.variable));*/
+
+                var newRow = selectedVariableTable.insertRow(selectedVariableTable.rows.length);
+                var newVarCell = newRow.insertCell(0);
+                var newSpecieCell = newRow.insertCell(1);
+                var newMultivariateCell = newRow.insertCell(2);
+                var multivariateCheckbox = document.createElement("input");
+                multivariateCheckbox.setAttribute("type", "checkbox");
+                var newSpatialCell = newRow.insertCell(3);
+                var spatialCheckbox = document.createElement("input");
+                spatialCheckbox.setAttribute("type", "checkbox");
+                var newTemporalCell = newRow.insertCell(4);
+                var temporalCheckbox = document.createElement("input");
+                temporalCheckbox.setAttribute("type", "checkbox");
+
+                newVarCell.appendChild(document.createTextNode(obj.variable));
+                newSpecieCell.appendChild(document.createTextNode(obj.specie));
+                newMultivariateCell.appendChild(multivariateCheckbox);
+                newSpatialCell.appendChild(spatialCheckbox);
+                newTemporalCell.appendChild(temporalCheckbox);
+
+
+            }
+
+            $('#fancytreeSimulations').fancytree({
+                extensions: ["glyph"],
+                checkbox: true,
+                selectMode: 1,
+                icon: false,
+                glyph: glyph_opts,
+                source: $scope.fancytreeData
             });
-            $("#accordion").accordion();
+
+            $('#fancytreeVariable').fancytree({
+                extensions: ["glyph"],
+                checkbox: true,
+                selectMode: 3,
+                icon: false,
+                glyph: glyph_opts,
+                source: $scope.variablesTree,
+                select: function (event, data) {
+
+
+                    var selRootNodes = data.tree.getSelectedNodes(true);
+                    while($scope.selectedVariables.length != 0) {
+                      $scope.selectedVariables.pop();
+                      selectedVariableTable.deleteRow(1);
+                    }
+                    //$scope.selectedVariables.length = 0;
+                    //selectedVariableTable.length = 1;
+                    selRootNodes.forEach(function (element) {
+                        if(element.getLevel() == 2) {
+                            var variable = element.title;
+                            if(element.children != null) {
+                                element.children.forEach(function (child) {
+                                    var specie = child.title;
+                                    $scope.selectedVariables.push({
+                                        variable: variable,
+                                        specie: specie
+                                    });
+                                });
+                            } else {
+                                var specie = "Sediment";
+                                $scope.selectedVariables.push({
+                                   variable: variable,
+                                   specie: specie
+                                });
+                            }
+                        }
+                        else if(element.getLevel() == 3) {
+                            var specie = element.title;
+                            var variable = element.parent.title;
+                            $scope.selectedVariables.push({
+                               variable: variable,
+                               specie: specie
+                            });
+                        } else {
+                            element.children.forEach(function (child) {
+                                var variable = child.title;
+                                if(child.children != null) {
+                                    child.children.forEach(function (grandson) {
+                                        var specie = grandson.title;
+                                        $scope.selectedVariables.push({
+                                            variable: variable,
+                                            specie: specie
+                                        });
+                                    });
+                                } else {
+                                    var specie = "Sediment";
+                                    $scope.selectedVariables.push({
+                                        variable: variable,
+                                        specie: specie
+                                    });
+                                }
+                            });
+                        }
+                    });
+                    console.log($scope.selectedVariables);
+                    $scope.selectedVariables.forEach(function (item) {
+                        addRowInTable(item);
+                    });
+                    //console.log(selRootNodes.getLevel());
+                }
+            });
+
+            $("#accordion").accordion({
+                heightStyle: "content"
+            });
         });
+
+
+
+
 
   </script>
 </body>

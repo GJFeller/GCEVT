@@ -29,50 +29,136 @@ angular.
         $scope.scale = 1;
         $scope.materialType = 'lambert';
 
-        $scope.treeData = [
+        $scope.fancytreeData = [
             {
-                text: "Ensemble1",
-                nodes:  [
-                            {
-                                text: "Sim1"
-                            },
-                            {
-                                text: "Sim2"
-                            },
-                            {
-                                text: "Sim3"
-                            }
-                        ]
-            },
-            {
-                text: "Ensemble2",
-                nodes:  [
+                title: "Ensemble1",
+                children:  [
                     {
-                        text: "Sim4"
+                        title: "Sim1",
+                        hideCheckbox: true
                     },
                     {
-                        text: "Sim5"
+                        title: "Sim2",
+                        hideCheckbox: true
                     },
                     {
-                        text: "Sim6"
+                        title: "Sim3",
+                        hideCheckbox: true
                     }
                 ]
             },
             {
-                text: "Ensemble3",
-                nodes:  [
+                title: "Ensemble2",
+                children:  [
                     {
-                        text: "Sim7"
+                        title: "Sim4",
+                        hideCheckbox: true
                     },
                     {
-                        text: "Sim8"
+                        title: "Sim5",
+                        hideCheckbox: true
                     },
                     {
-                        text: "Sim9"
+                        title: "Sim6",
+                        hideCheckbox: true
+                    }
+                ]
+            },
+            {
+                title: "Ensemble3",
+                children:  [
+                    {
+                        title: "Sim7",
+                        hideCheckbox: true
+                    },
+                    {
+                        title: "Sim8",
+                        hideCheckbox: true
+                    },
+                    {
+                        title: "Sim9",
+                        hideCheckbox: true
                     }
                 ]
             }
         ];
+
+        $scope.variablesTree = [
+            {
+                title: "Mineral",
+                hideCheckbox: true,
+                children: [
+                    {
+                        title: "Volume Fraction",
+                        children: [
+                            {
+                                title: "Quartz"
+                            },
+                            {
+                                title: "Calcite"
+                            },
+                            {
+                                title: "Dolomite"
+                            }
+                        ]
+                    },
+                    {
+                        title: "Saturation",
+                        children: [
+                            {
+                                title: "Quartz"
+                            },
+                            {
+                                title: "Calcite"
+                            },
+                            {
+                                title: "Dolomite"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                title: "Solute",
+                hideCheckbox: true,
+                children: [
+                    {
+                        title: "Concentration",
+                        children: [
+                            {
+                                title: "Ca++"
+                            },
+                            {
+                                title: "H+"
+                            },
+                            {
+                                title: "CO3--"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                title: "Sediment",
+                hideCheckbox: true,
+                children: [
+                    {
+                        title: "Temperature"
+                    },
+                    {
+                        title: "Porosity"
+                    },
+                    {
+                        title: "Permeability"
+                    },
+                    {
+                        title: "Tortuosity"
+                    }
+                ]
+            }
+        ]
+
+    $scope.selectedVariables = [];
 
 }]);
     /*.component('iris', {
