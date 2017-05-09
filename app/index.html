@@ -128,10 +128,10 @@
                       <div id="leftPlots" class="col-sm-6">
 
                                   <!--<button ng-click="printIrisData()">Click Me!</button>!-->
-                              <div id="parCoord" style="height: 100%">
+                              <!--<div id="parCoord" style="height: 100%">
                                   <!--<parcoord data="jsonIrisList"></parcoord>!-->
-                                  <splotm data="jsonIrisList"></splotm>
-                              </div>
+                                  <!--<splotm data="jsonIrisList"></splotm>
+                              </div>-->
                                   <!--<splotm data="jsonIrisList"></splotm>
                                   <div
                                       id="webglContainer"
@@ -150,7 +150,7 @@
                                   </ul>!-->
 
                           <div class="row">
-                              <div id="webgl" style="height: 300px">
+                              <!--<div id="webgl" style="height: 300px">
                                   <div
                                           id="webglContainer"
                                           ng-webgl
@@ -159,13 +159,13 @@
                                           material-type="materialType"
                                           data="jsonIrisList"
                                   ></div>
-                              </div>
+                              </div>-->
                           </div>
                       </div>
                       <div class="col-sm-6">
-                          <div id="lineChart">
+                          <!--<div id="lineChart">
                               <linechart data="jsonIrisList"></linechart>
-                          </div>
+                          </div>-->
                       </div>
 
 
@@ -205,6 +205,8 @@
   <script src="core/core.module.js"></script>
   <script src="core/iris/iris.module.js"></script>
   <script src="core/iris/iris.service.js"></script>
+  <script src="core/ensembleREST/ensemble.module.js"></script>
+  <script src="core/ensembleREST/ensemble.service.js"></script>
   <script src="core/d3-service/d3.module.js"></script>
   <script src="core/d3-service/d3.service.js"></script>
   <script src="view1/view1.js"></script>
@@ -251,15 +253,61 @@
             });*/
 
             function onChangeSpatialCheckbox() {
+                //console.log(this);
+                //console.log("onChangeSpatialCheckbox");
+                var checkedValue = this.checked;
+                //console.log(checkedValue);
+                var pos = -1;
+                for(var i = 0; i < $scope.spatialcheckboxes.length; i++) {
+                    if(this != $scope.spatialcheckboxes[i]) {
+                        if(this.checked && $scope.spatialcheckboxes[i].checked) {
+                            $scope.spatialcheckboxes[i].checked = false;
+                            $scope.spatialVariables.pop();
+                        }
+                    } else {
+                        $scope.spatialVariables.pop();
+                        pos = i;
+                    }
+                }
+                if(this.checked) {
+                    $scope.spatialVariables.push($scope.selectedVariables[pos]);
+                }
+                console.log("Selected spatial variables:");
+                console.log($scope.spatialVariables);
 
             }
 
             function onChangeMultivariateCheckbox() {
+                //console.log(this);
+                //console.log("onChangeMultivariateCheckbox");
+                var checkedValue = this.checked;
+                while($scope.multivariateVariables.length != 0) {
+                    $scope.multivariateVariables.pop();
+                }
+                $scope.multivariatecheckboxes.forEach(function (item, i) {
+                    if(item.checked) {
+                        $scope.multivariateVariables.push($scope.selectedVariables[i]);
+                    }
+                });
+                console.log("Selected multivariate variables:");
+                console.log($scope.multivariateVariables);
 
             }
 
             function onChangeTemporalCheckbox() {
-
+                //console.log(this);
+                //console.log("onChangeTemporalCheckbox");
+                var checkedValue = this.checked;
+                while($scope.temporalVariables.length != 0) {
+                    $scope.temporalVariables.pop();
+                }
+                $scope.temporalcheckboxes.forEach(function (item, i) {
+                    if(item.checked) {
+                        $scope.temporalVariables.push($scope.selectedVariables[i]);
+                    }
+                });
+                console.log("Selected temporal variables:");
+                console.log($scope.temporalVariables);
             }
 
             function addRowInTable(obj) {
@@ -273,44 +321,62 @@
                 var newMultivariateCell = newRow.insertCell(2);
                 var multivariateCheckbox = document.createElement("input");
                 multivariateCheckbox.setAttribute("type", "checkbox");
+                multivariateCheckbox.onchange = onChangeMultivariateCheckbox;
                 var newSpatialCell = newRow.insertCell(3);
                 var spatialCheckbox = document.createElement("input");
                 spatialCheckbox.setAttribute("type", "checkbox");
+                spatialCheckbox.onchange = onChangeSpatialCheckbox;
                 var newTemporalCell = newRow.insertCell(4);
                 var temporalCheckbox = document.createElement("input");
                 temporalCheckbox.setAttribute("type", "checkbox");
+                temporalCheckbox.onchange = onChangeTemporalCheckbox;
 
                 newVarCell.appendChild(document.createTextNode(obj.variable));
                 newSpecieCell.appendChild(document.createTextNode(obj.specie));
                 newMultivariateCell.appendChild(multivariateCheckbox);
+                $scope.multivariatecheckboxes.push(multivariateCheckbox);
                 newSpatialCell.appendChild(spatialCheckbox);
+                $scope.spatialcheckboxes.push(spatialCheckbox);
                 newTemporalCell.appendChild(temporalCheckbox);
+                $scope.temporalcheckboxes.push(temporalCheckbox);
 
 
             }
 
-            $('#fancytreeSimulations').fancytree({
+            $scope.fancytreeEnsemble = $('#fancytreeSimulations').fancytree({
                 extensions: ["glyph"],
                 checkbox: true,
                 selectMode: 1,
                 icon: false,
                 glyph: glyph_opts,
-                source: $scope.fancytreeData
+                source: $scope.ensembleTreeData,
+                select: function (event, data) {
+                    var selRootNodes = data.tree.getSelectedNodes(true);
+                    console.log(selRootNodes);
+                    $('#fancytreeVariable').fancytree("getTree").clear();
+                    if(selRootNodes.length > 0) {
+                        $scope.queryVariableList($scope.ensembleListJson[selRootNodes[0].getIndex()]);
+                    }
+                }
+                //source: $scope.fancytreeData
             });
 
-            $('#fancytreeVariable').fancytree({
+            $scope.fancytreeEnsembleVariables = $('#fancytreeVariable').fancytree({
                 extensions: ["glyph"],
                 checkbox: true,
                 selectMode: 3,
                 icon: false,
                 glyph: glyph_opts,
-                source: $scope.variablesTree,
+                source: $scope.ensembleVariablesTreeData,
                 select: function (event, data) {
 
 
                     var selRootNodes = data.tree.getSelectedNodes(true);
                     while($scope.selectedVariables.length != 0) {
                       $scope.selectedVariables.pop();
+                      $scope.multivariatecheckboxes.pop();
+                      $scope.spatialcheckboxes.pop();
+                      $scope.temporalcheckboxes.pop();
                       selectedVariableTable.deleteRow(1);
                     }
                     //$scope.selectedVariables.length = 0;
@@ -371,7 +437,34 @@
             });
 
             $("#accordion").accordion({
-                heightStyle: "content"
+                heightStyle: "content",
+                collapsible:true,
+
+                beforeActivate: function(event, ui) {
+                    // The accordion believes a panel is being opened
+                    if (ui.newHeader[0]) {
+                        var currHeader  = ui.newHeader;
+                        var currContent = currHeader.next('.ui-accordion-content');
+                        // The accordion believes a panel is being closed
+                    } else {
+                        var currHeader  = ui.oldHeader;
+                        var currContent = currHeader.next('.ui-accordion-content');
+                    }
+                    // Since we've changed the default behavior, this detects the actual status
+                    var isPanelSelected = currHeader.attr('aria-selected') == 'true';
+
+                    // Toggle the panel's header
+                    currHeader.toggleClass('ui-corner-all',isPanelSelected).toggleClass('accordion-header-active ui-state-active ui-corner-top',!isPanelSelected).attr('aria-selected',((!isPanelSelected).toString()));
+
+                    // Toggle the panel's icon
+                    currHeader.children('.ui-icon').toggleClass('ui-icon-triangle-1-e',isPanelSelected).toggleClass('ui-icon-triangle-1-s',!isPanelSelected);
+
+                    // Toggle the panel's content
+                    currContent.toggleClass('accordion-content-active',!isPanelSelected)
+                    if (isPanelSelected) { currContent.slideUp(); }  else { currContent.slideDown(); }
+
+                    return false; // Cancels the default action
+                }
             });
         });
 
