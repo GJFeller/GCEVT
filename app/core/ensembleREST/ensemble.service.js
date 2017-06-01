@@ -17,7 +17,14 @@ factory('Ensemble', ['$resource',
              }),
             variables: $resource('http://localhost:8008/getAllVariables', {}, {
                 query: {method: 'GET', params: {ensembleId: '@ensembleId'}, isArray: true}
+            }),
+            temporalData: $resource('http://localhost:8008/getTemporalVarData/:xIdx/:yIdx/:zIdx/:simulationId/:varId/:ensembleId', {}, {
+                query: {method: 'GET', params: {xIdx: '@xIdx', yIdx: '@yIdx', zIdx: '@zIdx', simulationId: '@simulationId', varId: '@varId', ensembleId: '@ensembleId'}, isArray: true}
+            }),
+            multivariateData: $resource('http://localhost:8008/getMultivariateData/:xIdx/:yIdx/:zIdx/:time/:simulationId/:varIdList', {}, {
+                query: {method: 'GET', params: {xIdx: '@xIdx', yIdx: '@yIdx', zIdx: '@zIdx', time: '@time', simulationId: '@simulationId', varIdList: '@varIdList'}, isArray: true}
             })
+
 
         };
         /*var t0 = performance.now();

@@ -11,6 +11,8 @@ angular.
         $scope.ensembleListJson = [];
         $scope.ensembleTreeData = [];
         $scope.fancytreeEnsemble;
+        $scope.selectedEnsembleIdx = 0;
+
 
         $scope.ensembleVariables = [];
         $scope.ensembleVariablesTreeData = [];
@@ -41,6 +43,7 @@ angular.
         $scope.scale = 1;
         $scope.materialType = 'lambert';
 
+        $scope.currentEnsembleId;
 
         Ensemble.listEnsembles.query().$promise.then(function(result) {
            console.log(result);
@@ -67,7 +70,8 @@ angular.
             $scope.fancytreeEnsemble.fancytree('option', 'source', $scope.ensembleTreeData);
             if($scope.ensembleTreeData.length > 0) {
                 console.log($scope.ensembleListJson[0]);
-                $scope.queryVariableList($scope.ensembleListJson[0]);
+                $scope.queryVariableList($scope.ensembleListJson[$scope.selectedEnsembleIdx]);
+
             }
         });
 
@@ -78,7 +82,7 @@ angular.
             while($scope.ensembleVariables.length > 0) {
                 $scope.ensembleVariables.pop();
             }
-
+            $scope.currentEnsembleId = ensembleSelected._id;
             Ensemble.ensembleVariables.query({ensembleId: ensembleSelected._id}).$promise.then(function (varResult) {
                 $scope.varListToFancytreeData(varResult);
                 $scope.fancytreeEnsembleVariables.fancytree('option', 'source', $scope.ensembleVariablesTreeData);
@@ -91,6 +95,8 @@ angular.
                 var name = item.name;
                 var specie = item.specie;
                 var type = "";
+                var id = item._id;
+                console.log(id);
 
                 switch(item.type.toLowerCase()) {
                     case "solid":
@@ -117,7 +123,7 @@ angular.
                             if(varNode.title == name) {
                                 if(type != "Sediment") {
                                     wasAddedVarLevel = true;
-                                    varNode.children.push({title: specie});
+                                    varNode.children.push({title: specie, key: id});
                                 }
                             }
                         });
@@ -125,11 +131,11 @@ angular.
                             if(type != "Sediment") {
                                 rootNode.children.push({
                                     title: name,
-                                    children: [{title: specie}]
+                                    children: [{title: specie, key: id}]
                                 });
                             }
                             else {
-                                rootNode.children.push({ title: name });
+                                rootNode.children.push({ title: name, key: id });
                             }
                         }
                     }
@@ -141,7 +147,7 @@ angular.
                             children: [
                                 {
                                     title: name,
-                                    children: [{title: specie}]
+                                    children: [{title: specie, key: id}]
                                 }
                             ]
                         });
@@ -150,7 +156,8 @@ angular.
                             title: type,
                             children: [
                                 {
-                                    title: name
+                                    title: name,
+                                    key: id
                                 }
                             ]
                         });
@@ -159,80 +166,90 @@ angular.
             });
         };
 
-        $scope.variablesTree = [
-            {
-                title: "Mineral",
-                hideCheckbox: true,
-                children: [
-                    {
-                        title: "Volume Fraction",
-                        children: [
-                            {
-                                title: "Quartz"
-                            },
-                            {
-                                title: "Calcite"
-                            },
-                            {
-                                title: "Dolomite"
-                            }
-                        ]
-                    },
-                    {
-                        title: "Saturation",
-                        children: [
-                            {
-                                title: "Quartz"
-                            },
-                            {
-                                title: "Calcite"
-                            },
-                            {
-                                title: "Dolomite"
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                title: "Solute",
-                hideCheckbox: true,
-                children: [
-                    {
-                        title: "Concentration",
-                        children: [
-                            {
-                                title: "Ca++"
-                            },
-                            {
-                                title: "H+"
-                            },
-                            {
-                                title: "CO3--"
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                title: "Sediment",
-                hideCheckbox: true,
-                children: [
-                    {
-                        title: "Temperature"
-                    },
-                    {
-                        title: "Porosity"
-                    },
-                    {
-                        title: "Permeability"
-                    },
-                    {
-                        title: "Tortuosity"
-                    }
-                ]
+    $scope.queryTemporalData = function (varInfo, simulationList, xIdx, yIdx, zIdx) {
+        simulationList.forEach(function (simulation, idx) {
+            var simulationId = simulation;
+            while($scope.temporalData.length != 0) {
+                $scope.temporalData.pop();
             }
-        ]
+            Ensemble.temporalData.query({xIdx: xIdx, yIdx: yIdx, zIdx: zIdx, simulationId: simulationId, varId: varInfo.id, ensembleId: $scope.currentEnsembleId}).$promise.then(function (temporalData) {
+                var data = {
+                    name: simulationId,
+                    x: [],
+                    y: []
+                };
+                temporalData.forEach(function (item) {
+                    data.x.push(item.time);
+                    data.y.push(item.variables[0].value);
+                });
+                $scope.temporalData.push(data);
+            });
+        });
+
+
+    };
+
+    $scope.queryMultivariateData = function (varListInfo, simulationList, xIdx, yIdx, zIdx, time) {
+        var dataList = [];
+        simulationList.forEach(function (simulation, idx) {
+            var simulationId = simulation;
+            var varIdList = [];
+            varListInfo.forEach(function (v) {
+                varIdList.push(v.id);
+            });
+
+            Ensemble.multivariateData.query({xIdx: xIdx, yIdx: yIdx, zIdx: zIdx, time: time, simulationId: simulationId, varIdList: varIdList}).$promise.then(function (multivariateData) {
+
+
+                var varNameList = [];
+                varListInfo.forEach(function (variable, idx) {
+                    varNameList[idx] = variable.variable + "-" + variable.specie;
+                });
+
+
+                multivariateData.forEach(function (aData) {
+                    var data = {};
+                    data.name = simulationId;
+                    varListInfo.forEach(function (variable, idx) {
+                        for(var i = 0; i < aData.variables.length; i++) {
+                            if(variable.id == aData.variables[i].variableId) {
+                                data[varNameList[idx]] = aData.variables[i].value;
+                            }
+                        }
+                    });
+                    dataList.push(data);
+
+                });
+                console.log(dataList);
+                //$scope.multivariateData.concat(dataList);
+                /*var data = {
+                    name: simulationId,
+                    xIdx: xIdx,
+                    yIdx: yIdx,
+                    zIdx: zIdx,
+                    time: time,
+                    variables: multivariateData[0].variables
+                };*/
+                /*data.variables.forEach(function (item) {
+                   for(var i = 0; i < varListInfo.length; i++) {
+                       if(varListInfo[i].id == item.variableId) {
+                           item['specie'] = varListInfo[i].specie;
+                           item['variable'] = varListInfo[i].variable;
+                       }
+                   }
+                });*/
+                //$scope.multivariateData.push(data);
+            });
+            //$scope.$apply();
+        });
+        $scope.multivariateData.concat(dataList);
+        $scope.multivariateData.push(1);
+        $scope.multivariateData.pop();
+        $scope.$apply(function () {
+            $scope.multivariateData.push(1);
+            $scope.multivariateData.pop();
+        });
+    };
 
     $scope.selectedVariables = [];
     $scope.multivariatecheckboxes = [];
@@ -242,6 +259,8 @@ angular.
     $scope.multivariateVariables = [];
     $scope.spatialVariables = [];
     $scope.temporalVariables = [];
+    $scope.temporalData = [];
+    $scope.multivariateData = [];
 
 }]);
     /*.component('iris', {

@@ -132,8 +132,9 @@
                                   <!--<parcoord data="jsonIrisList"></parcoord>!-->
                                   <!--<splotm data="jsonIrisList"></splotm>
                               </div>-->
-                                  <!--<splotm data="jsonIrisList"></splotm>
-                                  <div
+                                  <splotm data="multivariateData"
+                                          variables="multivariateVariables"></splotm>
+                                  <!--<div
                                       id="webglContainer"
                                       ng-webgl
                                       width="canvasWidth"
@@ -163,9 +164,11 @@
                           </div>
                       </div>
                       <div class="col-sm-6">
-                          <!--<div id="lineChart">
-                              <linechart data="jsonIrisList"></linechart>
-                          </div>-->
+                          <div id="lineChart">
+                              <linechart
+                                      data="temporalData"
+                                      variables="temporalVariables"></linechart>
+                          </div>
                       </div>
 
 
@@ -284,6 +287,9 @@
                 while($scope.multivariateVariables.length != 0) {
                     $scope.multivariateVariables.pop();
                 }
+                while($scope.multivariateData.length != 0) {
+                    $scope.multivariateData.pop();
+                }
                 $scope.multivariatecheckboxes.forEach(function (item, i) {
                     if(item.checked) {
                         $scope.multivariateVariables.push($scope.selectedVariables[i]);
@@ -291,6 +297,10 @@
                 });
                 console.log("Selected multivariate variables:");
                 console.log($scope.multivariateVariables);
+
+                var simulationList = $scope.ensembleListJson[$scope.selectedEnsembleIdx].simulations;
+                if($scope.multivariateVariables.length > 0)
+                    $scope.queryMultivariateData($scope.multivariateVariables, simulationList, 0, 0, 0, 0);
 
             }
 
@@ -301,6 +311,7 @@
                 while($scope.temporalVariables.length != 0) {
                     $scope.temporalVariables.pop();
                 }
+
                 $scope.temporalcheckboxes.forEach(function (item, i) {
                     if(item.checked) {
                         $scope.temporalVariables.push($scope.selectedVariables[i]);
@@ -308,6 +319,13 @@
                 });
                 console.log("Selected temporal variables:");
                 console.log($scope.temporalVariables);
+                var simulationList = $scope.ensembleListJson[$scope.selectedEnsembleIdx].simulations;
+                if($scope.temporalVariables.length > 0)
+                    $scope.queryTemporalData($scope.temporalVariables[0], simulationList, 0, 0, 0);
+                console.log($scope.temporalData);
+                /*$scope.$apply(function() {
+                    //$scope.temporalData.push(1);
+                });*/
             }
 
             function addRowInTable(obj) {
@@ -389,14 +407,16 @@
                                     var specie = child.title;
                                     $scope.selectedVariables.push({
                                         variable: variable,
-                                        specie: specie
+                                        specie: specie,
+                                        id: child.key
                                     });
                                 });
                             } else {
                                 var specie = "Sediment";
                                 $scope.selectedVariables.push({
                                    variable: variable,
-                                   specie: specie
+                                   specie: specie,
+                                    id: element.key
                                 });
                             }
                         }
@@ -405,7 +425,8 @@
                             var variable = element.parent.title;
                             $scope.selectedVariables.push({
                                variable: variable,
-                               specie: specie
+                               specie: specie,
+                                id: element.key
                             });
                         } else {
                             element.children.forEach(function (child) {
@@ -415,14 +436,16 @@
                                         var specie = grandson.title;
                                         $scope.selectedVariables.push({
                                             variable: variable,
-                                            specie: specie
+                                            specie: specie,
+                                            id: child.key
                                         });
                                     });
                                 } else {
                                     var specie = "Sediment";
                                     $scope.selectedVariables.push({
                                         variable: variable,
-                                        specie: specie
+                                        specie: specie,
+                                        id: child.key
                                     });
                                 }
                             });
