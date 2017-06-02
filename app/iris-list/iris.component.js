@@ -240,6 +240,7 @@ angular.
                 });*/
                 //$scope.multivariateData.push(data);
             });
+            $scope.multivariateData = dataList;
             //$scope.$apply();
         });
         $scope.multivariateData.concat(dataList);

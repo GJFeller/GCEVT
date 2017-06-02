@@ -4,7 +4,7 @@
 angular.module('iris')
     .directive('splotm', ['d3Service', function (d3Service) {
         return {
-            restrict: 'EA',
+            restrict: 'E',
             scope: {
                 data: '=', // bi-directional data-binding
                 variables: '='
@@ -13,7 +13,7 @@ angular.module('iris')
 
                 d3Service.d3().then(function (d3) {
 
-                    var margin = {top: 30, right: 30, bottom: 30, left: 30};
+                    var margin = {top: 30, right: 30, bottom: 30, left: 50};
 
                     /*var width = 960,
                         size = 230,
@@ -108,8 +108,10 @@ angular.module('iris')
                             domainByTrait[trait] = d3.extent(data, function(d) { return d[trait]; });
                         });*/
 
-                        xAxis.tickSize(size * n);
-                        yAxis.tickSize(-size * n);
+                        xAxis.tickSize(size * n)
+                            .tickFormat(d3.format(".6s"));
+                        yAxis.tickSize(-size * n)
+                            .tickFormat(d3.format(".6s"));
 
                         var brush = d3.svg.brush()
                             .x(x)

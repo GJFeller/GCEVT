@@ -23,7 +23,7 @@ angular.module('iris')
                         //xScale for parallel coord
                         xScale = d3.scale.linear().range([0, width]),
                         yScale = d3.scale.linear().range([height, 0]),
-                        zScale = d3.scale.category10();
+                        zScale = d3.scale.category20();
 
 
 
