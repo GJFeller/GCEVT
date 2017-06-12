@@ -8,20 +8,22 @@ module('core.ensemble').
 factory('Ensemble', ['$resource',
     function($resource) {
 
+        //var url = 'http://localhost:8008';
+        var url = 'http://ensemblemongobackend.azurewebsites.net';
         return {
-            listEnsembles: $resource('http://localhost:8008/getAllEnsembles', {}, {
+            listEnsembles: $resource(url + '/getAllEnsembles', {}, {
                 query: {method: 'GET', params: {}, isArray: true}
             }),
-             ensembleVariables: $resource('http://localhost:8008/getVariablesEnsemble/:ensembleId', {}, {
+             ensembleVariables: $resource(url + '/getVariablesEnsemble/:ensembleId', {}, {
                 query: {method: 'GET', params: {ensembleId: '@ensembleId'}, isArray: true}
              }),
-            variables: $resource('http://localhost:8008/getAllVariables', {}, {
+            variables: $resource(url + '/getAllVariables', {}, {
                 query: {method: 'GET', params: {ensembleId: '@ensembleId'}, isArray: true}
             }),
-            temporalData: $resource('http://localhost:8008/getTemporalVarData/:xIdx/:yIdx/:zIdx/:simulationId/:varId/:ensembleId', {}, {
+            temporalData: $resource(url + '/getTemporalVarData/:xIdx/:yIdx/:zIdx/:simulationId/:varId/:ensembleId', {}, {
                 query: {method: 'GET', params: {xIdx: '@xIdx', yIdx: '@yIdx', zIdx: '@zIdx', simulationId: '@simulationId', varId: '@varId', ensembleId: '@ensembleId'}, isArray: true}
             }),
-            multivariateData: $resource('http://localhost:8008/getMultivariateData/:xIdx/:yIdx/:zIdx/:time/:simulationId/:varIdList', {}, {
+            multivariateData: $resource(url +'/getMultivariateData/:xIdx/:yIdx/:zIdx/:time/:simulationId/:varIdList', {}, {
                 query: {method: 'GET', params: {xIdx: '@xIdx', yIdx: '@yIdx', zIdx: '@zIdx', time: '@time', simulationId: '@simulationId', varIdList: '@varIdList'}, isArray: true}
             })
 
