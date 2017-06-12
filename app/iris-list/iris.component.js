@@ -55,7 +55,7 @@ angular.
                item.simulations.forEach(function (sim) {
                   var childDict = {};
                   childDict.title = sim;
-                  childDict.hideCheckbox = true;
+                  childDict.checkbox = false;
                   children.push(childDict);
                });
                dict.children = children;

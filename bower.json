@@ -13,8 +13,9 @@
     "angular-mocks": "~1.5.0",
     "html5-boilerplate": "^5.3.0",
     "bootstrap": "3.3.x",
+    "jquery": "latest",
     "jquery-ui": "latest",
-    "fancytree": "fancytree#*",
+    "fancytree": "latest",
     "three.js": "threejs#*"
   }
 }
