@@ -15,15 +15,17 @@
     "karma-jasmine": "^0.3.8",
     "karma-junit-reporter": "^0.4.1",
     "protractor": "^4.0.9",
-    "mongoose": "~3.6.13"
+    "mongoose": "~3.6.13",
+    "three.js": "threejs#*"
   },
   "scripts": {
-    "postinstall": "bower install",
+
 
     "update-deps": "npm update",
     "postupdate-deps": "bower update",
 
     "prestart": "npm install",
+    "postinstall": "bower install",
     "start": "http-server -a localhost -p 8000 -c-1 ./app",
 
     "pretest": "npm install",
