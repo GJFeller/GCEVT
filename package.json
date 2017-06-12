@@ -15,8 +15,7 @@
     "karma-jasmine": "^0.3.8",
     "karma-junit-reporter": "^0.4.1",
     "protractor": "^4.0.9",
-    "mongoose": "~3.6.13",
-    "three.js": "threejs#*"
+    "mongoose": "~3.6.13"
   },
   "scripts": {
 
